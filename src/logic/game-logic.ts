@@ -6,7 +6,7 @@ export interface GameFeedback {
 }
 
 /**
- * Função de comparação: O coração do Termo.
+ *  O coração do Termo.
  * Responsabilidade Única (SOLID): Validar o palpite contra a palavra alvo.
  */
 export const checkGuess = (guess: string, target: string): GameFeedback[] => {
@@ -20,7 +20,6 @@ export const checkGuess = (guess: string, target: string): GameFeedback[] => {
 
   const targetLetterCount: Record<string, number> = {};
 
-  // Primeiro passo: Mapear letras corretas e contar letras na palavra alvo
   for (let i = 0; i < 5; i++) {
     const char = targetUpper[i];
     targetLetterCount[char] = (targetLetterCount[char] || 0) + 1;

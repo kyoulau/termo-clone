@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Grid } from "../components/Grid";
 import { Keyboard } from "../components/Keyboard";
 import { checkGuess, type GameFeedback } from "../logic/game-logic";
-import { isValidWord } from "../logic/words";
+import { Modal } from "../components/Modal";
 
 const TARGET_WORD = "NEWSY";
 
@@ -12,16 +12,25 @@ export function Home(){
   const [guesses, setGuesses] = useState<GameFeedback[][]>([]); 
   const [isGameOver, setIsGameOver] = useState(false);
 
+  const [modalConfig, setModalConfig] = useState({
+    isOpen: false,
+    type: 'success' as 'success' | 'error' | 'warning',
+    title: '',
+    message: ''
+  });
+
+  const showModal = (type: 'success' | 'error' | 'warning', title: string, message: string) => {
+    setTimeout(() => {
+      setModalConfig({ isOpen: true, type, title, message });
+    }, 800);
+  };
+
   const handleInput = (key: string) => {
     if (isGameOver) return;
 
     if (key === 'ENTER') {
       if (currentGuess.length !== 5) return;
 
-      if (!isValidWord(currentGuess)) {
-        alert("Esta palavra não consta no nosso dicionário matinal. ☕");
-        return;
-      }
 
       const feedback = checkGuess(currentGuess, TARGET_WORD);
       const newGuesses = [...guesses, feedback];
@@ -32,12 +41,10 @@ export function Home(){
 
       if (currentGuess === TARGET_WORD) {
         setIsGameOver(true);
-        setTimeout(() => {
-                alert("☕ Bom dia! Você acertou a manchete.");
-        }, 500);
+        showModal('success', '🏆 BOM DIA!', 'Você dominou a manchete de hoje com maestria.');
       } else if (attempts === 5) {
         setIsGameOver(true);
-        alert(`Fim de jogo. A palavra era ${TARGET_WORD}`);
+        showModal('error', '❌ TENTE AMANHÃ', `A palavra era ${TARGET_WORD}. O fracasso é apenas um degrau.`);
       }
     } else if (key === 'DEL') {
       setCurrentGuess(prev => prev.slice(0, -1));
@@ -59,21 +66,28 @@ export function Home(){
   }, [currentGuess, isGameOver, attempts]);
 
   return (
-    <div className="min-h-screen bg-news-beige flex flex-col items-center py-8 px-4">
+    <div className="min-h-screen bg-beige flex flex-col items-center px-4">
       <header className="mb-8 text-center">
-        <h1 className="text-4xl font-extrabold text-news-black tracking-tighter">
-          the news <span className="text-news-yellow">termo</span>
+        <h1 className="text-4xl font-extrabold text-black tracking-tighter">
+          the news <span className="text-yellow">termo</span>
         </h1>
         <p className="text-sm text-gray-600 mt-2 font-medium">
           ☕ sua dose matinal de lógica.
         </p>
       </header>
 
-      <Grid guesses={guesses} currentGuess={currentGuess} attempts={attempts} />
+      <main className="grow flex flex-col items-center justify-center w-full">
+        <Grid guesses={guesses} currentGuess={currentGuess} attempts={attempts} />
+      </main>
       
-      <div className="mt-auto w-full flex justify-center">
+      <footer className="mt-auto w-full flex justify-center pb-6">
         <Keyboard onKeyPress={handleInput} />
-      </div>
+      </footer>
+
+      <Modal 
+        {...modalConfig} 
+        onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))} 
+      />
     </div>
   );
 }

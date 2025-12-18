@@ -1,26 +1,25 @@
-import words from 'dictionary-pt';
+
+const BASE_WORDS = [
+  "NEWSY", "MUNDO", "GERAL", "TECHY", "MIDIA", 
+  "FATOS", "POVOO", "LIDER", "DADOS", "TEMPO",
+  "VALOR", "VIVER", "IDEIA", "FORTE", "PONTO"
+];
 
 const getCleanedWords = (): string[] => {
-  const wordsArray = Array.isArray(words) ? words : Object.keys(words);
-
-  const filtered = wordsArray
-    .filter((word: string) => word.length === 5) // Tipagem explícita 
-    .map((word: string) => 
-      word.normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toUpperCase()
-    );
-
-  return Array.from(new Set(filtered));
+  return BASE_WORDS.map(word => 
+    word.normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase()
+  );
 };
 
 export const VALID_WORDS = getCleanedWords();
 
-export const getRandomWord = () => {
+export const getRandomWord = (): string => {
   const index = Math.floor(Math.random() * VALID_WORDS.length);
   return VALID_WORDS[index];
 };
 
-export const isValidWord = (word: string) => {
+export const isValidWord = (word: string): boolean => {
   return VALID_WORDS.includes(word.toUpperCase());
 };
