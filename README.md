@@ -2,6 +2,8 @@
 
 > **"Sua dose matinal de lógica com a cara do the news."**
 
+https://termo-clone-smoky.vercel.app/
+
 Este projeto é uma aplicação web de alta performance, desenvolvida como um case técnico para o **The News**. A aplicação recria a mecânica clássica do jogo *Termo/Wordle*, totalmente integrada à identidade visual e ao tom de voz da marca.
 
 ---
